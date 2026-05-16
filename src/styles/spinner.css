@@ -1,0 +1,14 @@
+.circle {
+  width: 30px;
+  aspect-ratio: 1/1;
+  border: 5px solid rgb(19, 19, 229);
+  border-radius: 50%;
+  border-top: 5px solid rgb(174, 174, 228);
+  animation: spin 1s ease infinite forwards;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
