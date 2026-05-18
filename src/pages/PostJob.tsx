@@ -93,7 +93,7 @@ const PostJob = () => {
 
               <div className="space-y-6">
                 <div className="flex-col md:flex justify-between gap-5">
-                  <div className="flex-grow">
+                  <div className="grow">
                     <label>Job Title</label>
                     <input
                       className="w-full px-4 py-3 bg-surface rounded-lg border border-slate-200"
@@ -102,7 +102,7 @@ const PostJob = () => {
                       onChange={(e) => setTitle(e.target.value)}
                     />
                   </div>
-                  <div className="flex-grow">
+                  <div className="grow">
                     <label>Job Location</label>
                     <input
                       className="w-full px-4 py-3 bg-surface rounded-lg border border-slate-200"
@@ -124,7 +124,7 @@ const PostJob = () => {
                   />
                 </div>
                 <div className="flex flex-col text-center lg:flex-row lg:justify-between gap-5">
-                  <div className="flex flex-col flex-grow">
+                  <div className="flex flex-col grow">
                     <label>Currency</label>
                     <select
                       value={currency}
@@ -136,7 +136,7 @@ const PostJob = () => {
                       <option value="N">NAIRA</option>
                     </select>
                   </div>
-                  <div className="flex flex-col flex-grow">
+                  <div className="flex flex-col grow">
                     <label>Min Salary</label>
                     <select
                       className="px-4 py-3 bg-surface rounded-lg border"
@@ -151,7 +151,7 @@ const PostJob = () => {
                       <option value="300,000">300,000 - 400,000</option>
                     </select>
                   </div>
-                  <div className="flex flex-col flex-grow">
+                  <div className="flex flex-col grow">
                     <label>Max Salary</label>
                     <select
                       className="px-4 py-3 bg-surface rounded-lg border"

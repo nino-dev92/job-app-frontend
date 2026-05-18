@@ -45,7 +45,7 @@ const Signup = () => {
       <NavBar />
 
       {/* Main */}
-      <main className="flex-grow pt-16 flex items-center justify-center relative overflow-hidden">
+      <main className="grow pt-16 flex items-center justify-center relative overflow-hidden">
         {/* Background blur blobs */}
         <div className="absolute inset-0 -z-10 opacity-30">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl" />
@@ -126,7 +126,7 @@ const Signup = () => {
                 />
 
                 {/** Role */}
-                <div className="border-1 rounded p-2 flex justify-center gap-5">
+                <div className="border rounded p-2 flex justify-center gap-5">
                   <div className="flex gap-1">
                     <label>Employer</label>
                     <input

@@ -37,7 +37,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4">
               <NavLink
                 to="/login"
-                className="text-slate-600 hover:text-blue-700 font-semibold hover:text-blue-600 transition"
+                className="text-slate-600 font-semibold hover:text-blue-600 transition"
               >
                 Log In
               </NavLink>
@@ -62,7 +62,7 @@ const Navbar = () => {
               onClick={showMenu}
             />
             <h1 className="font-bold text-blue-600 text-xl">TalentHub</h1>
-            <div className="hidden md:flex text-slate-600 flex gap-4">
+            <div className="hidden md:flex text-slate-600 gap-4">
               <Link
                 to="/dashboard"
                 className="font-normal text-slate-600 text-md active:font-bold"

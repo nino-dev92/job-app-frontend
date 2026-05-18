@@ -65,7 +65,7 @@ const ApplicantDashboard: React.FC = () => {
                     {applications.map((applicant: any, index: any) => (
                       <tr
                         key={index}
-                        className="cursor-pointer border-1 hover:border-blue-500 hover:bg-blue-400 hover:text-white"
+                        className="cursor-pointer border hover:border-blue-500 hover:bg-blue-400 hover:text-white"
                         onClick={() => {
                           setSelectedApplication(applicant);
                           console.log(selectedApplication);

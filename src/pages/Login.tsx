@@ -46,7 +46,7 @@ const Login = () => {
       <NavBar />
 
       {/* Main */}
-      <main className="flex-grow pt-24 pb-16 px-6 flex items-center justify-center relative overflow-hidden">
+      <main className="grow pt-24 pb-16 px-6 flex items-center justify-center relative overflow-hidden">
         {/* Background blobs */}
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl" />

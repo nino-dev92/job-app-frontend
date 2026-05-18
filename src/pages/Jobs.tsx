@@ -116,7 +116,7 @@ export default function Jobs() {
                 {jobs.map((job) => (
                   <div
                     key={job._id}
-                    className="bg-white p-6 m-auto rounded-xl border flex flex-col min-w-[100%]"
+                    className="bg-white p-6 m-auto rounded-xl border flex flex-col min-w-full"
                   >
                     <div className="">
                       <h3 className=" font-bold text-lg">
