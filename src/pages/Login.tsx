@@ -11,7 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
    const navigate = useNavigate();
-  const { setAuth, setIsLoggeedIn } = useAuth();
+  const { setAuth } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -23,10 +23,16 @@ const Login = () => {
       const username = response?.data?.name;
       setAuth({ accessToken, role, id, username, isLoggedIn: true });
       if (response.status == 200) {
-        setIsLoggeedIn(true);
-        if (role == "employer") {
+        toast.success("Login Successful");
+       if (role == "employer") {
+        setTimeout(() => {
           navigate("/dashboard");
-        } else navigate("/jobs");
+         }, 2000);
+       }else  {
+        setTimeout(() => {
+          navigate("/jobs");
+         }, 2000);
+       }
       }
      if (response.status == 401) toast.error("Invalid Credentials");
     } catch (error: any) {

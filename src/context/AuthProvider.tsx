@@ -23,15 +23,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggeedIn] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [auth, setAuth] = useState<any>(() => {
-    const stored = localStorage.getItem("auth");
+    const stored = sessionStorage.getItem("auth");
     return stored ? JSON.parse(stored) : null;
   });
 
   useEffect(() => {
     if (auth) {
-      localStorage.setItem("auth", JSON.stringify(auth));
+      sessionStorage.setItem("auth", JSON.stringify(auth));
     } else {
-      localStorage.removeItem("auth");
+      sessionStorage.removeItem("auth");
     }
   }, [auth]);
 
