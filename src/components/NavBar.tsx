@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "../styles/loginNav.css";
 import useAuth from "../hooks/useAuth";
 import { useState } from "react";
@@ -10,23 +10,24 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { TbMessages } from "react-icons/tb";
 
 const Navbar = () => {
-  const { isLoggedIn, auth, setAuth, setIsLoggeedIn } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const showMenu = () => {
     setOpen(!open);
   };
 
   const handleLogout = () => {
-    setAuth({});
+    setAuth(null);
     localStorage.removeItem("auth");
-    setIsLoggeedIn(false);
-  };
+    navigate("/login");
+     };
 
   return (
     <>
       {/** Not Logged in Nav */}
-      {!isLoggedIn && (
+      {!auth && (
         <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
           <div className="flex justify-between items-center h-16 px-6 max-w-7xl mx-auto">
             <div className="text-xl font-bold text-blue-600">
@@ -52,7 +53,7 @@ const Navbar = () => {
       )}
 
       {/** Employer Nav */}
-      {auth?.isLoggedIn && auth?.role == "employer" && (
+      {auth?.role == "employer" && (
         <nav className="fixed top-0 w-full bg-white border-b h-16 flex items-center justify-between px-6 z-50">
           <div className="flex items-center gap-6  ">
             <CgMenuGridO
@@ -75,19 +76,19 @@ const Navbar = () => {
             <button className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition">
               <Link to="/post-job">Post a Job</Link>
             </button>
-            <NavLink
-              to="/login"
-              className="text-slate-600 font-semibold hover:text-blue-600 hover:scale-120 transition-all"
+            <button
+              onClick={handleLogout}
+              className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
               title="logout"
             >
               <FaPowerOff size={23} />
-            </NavLink>
+            </button>
           </div>
         </nav>
       )}
 
       {/* * Employer MobileNav */}
-      {auth?.isLoggedIn && auth?.role == "employer" && (
+      {auth?.role == "employer" && (
         <aside
           className={`fixed left-0 top-0 bottom-0 w-[35%] ${open ? "translate-x-0" : "-translate-x-85"} border-r border-slate-200 bg-white flex flex-col items-center py-4 lg:hidden z-10 transition-all duration-500 ease`}
         >
@@ -124,7 +125,7 @@ const Navbar = () => {
               </NavLink>
               <div className="flex items-center hover:text-blue-600">
                 <FaPeopleGroup size={30} className="inline mr-2" />
-                <p className="cursor-pointer">Applications</p>
+                <NavLink to="/applicant-dashboard" className="cursor-pointer">Applications</NavLink>
               </div>
               <div className="flex items-center hover:text-blue-600">
                 <MdOutlineAnalytics size={30} className="inline mr-2" />
@@ -132,16 +133,16 @@ const Navbar = () => {
               </div>
               <div className="flex items-center hover:text-blue-600">
                 <MdFactCheck size={30} className="inline mr-2" />
-                <p className="cursor-pointer">Company Profile</p>
+                <NavLink to="/company-profile" className="cursor-pointer">Company Profile</NavLink>
               </div>
               <div className="flex justify-center mt-30">
-                <NavLink
-                  to="/login"
-                  className="text-slate-600 font-semibold hover:text-blue-600 hover:scale-120 transition-all"
-                  title="logout"
-                >
-                  <FaPowerOff size={23} />
-                </NavLink>
+                 <button
+              onClick={handleLogout}
+              className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
+              title="logout"
+            >
+              <FaPowerOff size={23} />
+            </button>
               </div>
             </nav>
           </div>
@@ -149,7 +150,7 @@ const Navbar = () => {
       )}
 
       {/** Jobseeker Nav */}
-      {auth?.isLoggedIn && auth?.role == "jobseeker" && (
+      {auth?.role == "jobseeker" && (
         <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
           <div className="flex justify-between items-center h-16 px-6 max-w-7xl mx-auto">
             <CgMenuGridO
@@ -182,20 +183,20 @@ const Navbar = () => {
                   My Applications
                 </NavLink>
               </div>
-              <NavLink
-                to="/login"
-                className="text-slate-600 px-6 py-2 font-semibold hover:text-blue-600 transition"
-                title="logout"
-              >
-                <FaPowerOff size={23} onClick={handleLogout} />
-              </NavLink>
+             <button
+              onClick={handleLogout}
+              className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
+              title="logout"
+            >
+              <FaPowerOff size={23} />
+            </button>
             </div>
           </div>
         </nav>
       )}
 
       {/** Jobseeker MobileNav */}
-      {auth?.isLoggedIn && auth?.role == "jobseeker" && (
+      {auth?.role == "jobseeker" && (
         <aside
           className={`fixed left-0 top-0 bottom-0 w-[35%] ${open ? "translate-x-0" : "-translate-x-85"} border-r border-slate-200 bg-white flex flex-col items-center py-4 lg:hidden z-10 transition-all duration-400 ease`}
         >
@@ -222,13 +223,13 @@ const Navbar = () => {
                 </NavLink>
               </div>
               <div className="justify-end">
-                <NavLink
-                  to="/login"
-                  className="text-slate-600 px-6 py-2 font-semibold hover:text-blue-600 transition"
+                <button
+                  onClick={handleLogout}
+                  className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
                   title="logout"
-                >
-                  <FaPowerOff size={23} onClick={handleLogout} />
-                </NavLink>
+                > 
+                  <FaPowerOff size={23} />
+                </button>
               </div>
             </div>
           </nav>

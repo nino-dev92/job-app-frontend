@@ -10,7 +10,7 @@ import { Link } from "react-router";
 export default function Jobs() {
   const [jobs, setJobs] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [listView, setListView] = useState(true);
+  const [_listView, setListView] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const { isLoading, setIsLoading } = useAuth();
   const api = useAxiosPrivate();

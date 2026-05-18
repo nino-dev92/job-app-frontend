@@ -92,7 +92,7 @@ const PostJob = () => {
               </h2>
 
               <div className="space-y-6">
-                <div className="flex justify-between gap-5">
+                <div className="flex-col md:flex justify-between gap-5">
                   <div className="flex-grow">
                     <label>Job Title</label>
                     <input

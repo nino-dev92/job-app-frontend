@@ -1,38 +1,37 @@
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
+import { Toaster, toast } from "sonner";
 
 const Signup = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMessage("");
-    }, 3000);
-  }, [message]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (role == "") return setMessage("Please Select a Role");
+    if (role == "") return toast.error("Please Select a Role");
     try {
       const response = await api.post("/auth/register", {
-        name,
-        email,
+        name: name.trim().toLowerCase(),
+        email: email.trim().toLowerCase(),
         role,
         password,
       });
-      console.log(name, email, role, password);
-      setMessage("Signup Successful");
-      if (response.status == 201) navigate("/login");
+
+      toast.success("Account Created Successfully");
+      if (response.status == 201){
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      };
     } catch (error: any) {
-      setMessage(error?.response?.message);
+      if(error.response.message.includes("E11000")) return toast.error("Email already exists");
+      return toast.error("Account Creation Failed");
     }
   };
   return (
@@ -40,6 +39,8 @@ const Signup = () => {
       className="min-h-screen flex flex-col bg-background text-on-background font-body-md"
       onSubmit={handleSubmit}
     >
+      <Toaster position="top-right" richColors />
+
       {/* Top Nav */}
       <NavBar />
 
@@ -91,11 +92,6 @@ const Signup = () => {
           {/* Right Side - Form */}
           <div className="w-full max-w-md mx-auto">
             <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-xl">
-              <div>
-                <p className="text-black-500 bg-red-500 text-center">
-                  {message}
-                </p>
-              </div>
               <h2 className="text-2xl font-bold mb-1">Create Account</h2>
               <p className="text-slate-500 mb-6">Start your journey today</p>
 

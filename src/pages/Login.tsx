@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { Toaster, toast } from "sonner";
 import useAuth from "../hooks/useAuth";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -9,14 +10,13 @@ import api from "../api/axios";
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const navigate = useNavigate();
+   const navigate = useNavigate();
   const { setAuth, setIsLoggeedIn } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/login", { email, password });
+      const response = await api.post("/auth/login", { email: email.trim().toLowerCase(), password });
       const accessToken = response?.data?.accessToken;
       const role = response?.data?.role;
       const id = response?.data?.id;
@@ -28,10 +28,10 @@ const Login = () => {
           navigate("/dashboard");
         } else navigate("/jobs");
       }
-      if (response.status == 401) setMessage("Invalid Credentials");
-      console.log(response.data);
+     if (response.status == 401) toast.error("Invalid Credentials");
     } catch (error: any) {
-      setMessage(error?.response?.message);
+      // setMessage(error?.response?.message);
+      toast.error("Invalid Credentials");
     }
   };
 
@@ -40,6 +40,8 @@ const Login = () => {
       className="min-h-screen flex flex-col bg-background text-on-background font-body-md"
       onSubmit={handleSubmit}
     >
+      <Toaster position="top-right" richColors />
+
       {/* Top Navbar */}
       <NavBar />
 
@@ -85,9 +87,7 @@ const Login = () => {
           <div className="lg:col-span-5 w-full">
             <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-xl p-8 md:p-10">
               <div className="mb-8 text-center lg:text-left">
-                <div className="bg-black-500">
-                  <p className="text-red-500 text-center">{message}</p>
-                </div>
+
                 <h2 className="text-3xl font-bold">Welcome Back</h2>
                 <p className="text-slate-500">
                   Sign in to continue your journey
