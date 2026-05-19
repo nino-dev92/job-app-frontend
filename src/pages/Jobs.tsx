@@ -5,41 +5,52 @@ import { IoGridOutline } from "react-icons/io5";
 import Loading from "../components/Loading";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Navbar from "../components/NavBar";
-import { Link } from "react-router";
+import { FiSearch, FiMapPin } from "react-icons/fi";
+import { Link, useSearchParams } from "react-router-dom";
 
 export default function Jobs() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParam = searchParams.get("search") || "";
+  const locationParam = searchParams.get("location") || "";
   const [jobs, setJobs] = useState<any[]>([]);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>(searchParam);
+  const [location, setLocation] = useState<string>(locationParam);
   const [_listView, setListView] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { isLoading, setIsLoading } = useAuth();
   const api = useAxiosPrivate();
 
   useEffect(() => {
-    setIsLoading(true);
     fetchJobs();
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+  }, [currentPage, searchParam, locationParam]);
 
   const fetchJobs = async () => {
-    const res = await api.get("/jobs");
-    setJobs(res.data.jobs || res.data);
+    try {
+      setIsLoading(true);
+      const res = await api.get("/jobs", {
+        params: {
+          search: searchParam,
+          location: locationParam,
+          page: currentPage,
+          limit: 6
+        }
+      });
+      setJobs(res.data.jobs || []);
+      setTotalPages(res.data.pages || 1);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTimeout(() => setIsLoading(false), 500);
+    }
   };
 
-  useEffect(() => {
-    if (search === "") fetchJobs();
-  }, [search]);
-
-  const handleSearch = (searchTerm?: string) => {
-    const term = searchTerm ?? search;
-    const filteredJobs = jobs.filter(
-      (job) =>
-        job.title.toLowerCase().includes(term.toLowerCase()) ||
-        job.location.toLowerCase().includes(term.toLowerCase()),
-    );
-    setJobs(filteredJobs);
+  const handleSearch = () => {
+    const newParams = new URLSearchParams();
+    if (search) newParams.set("search", search);
+    if (location) newParams.set("location", location);
+    setSearchParams(newParams);
+    setCurrentPage(1);
   };
 
   return (
@@ -71,22 +82,30 @@ export default function Jobs() {
             {/* MAIN */}
             <main className="flex-1 p-6 max-w-[1280px] mx-auto">
               {/* SEARCH */}
-              <div className="flex justify-self-center gap-4 min-w-[70%] bg-white p-3 rounded-xl shadow mb-6">
-                <input
-                  className="flex-1"
-                  placeholder="Search jobs by name or location..."
-                  value={search}
-                  onChange={(e) => {
-                    const newSearch = e.target.value;
-                    setSearch(newSearch);
-                    handleSearch(newSearch);
-                  }}
-                />
+              <div className="flex flex-col lg:flex-row justify-self-center gap-4 w-full bg-white p-3 rounded-xl shadow-lg mb-8 border border-slate-100">
+                <div className="flex-1 flex items-center px-4 py-2 border-b lg:border-b-0 lg:border-r border-slate-50">
+                  <FiSearch className="text-slate-400 mr-3" />
+                  <input
+                    className="w-full outline-none text-slate-700 font-medium"
+                    placeholder="Search title, skills..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex items-center px-4 py-2">
+                  <FiMapPin className="text-slate-400 mr-3" />
+                  <input
+                    className="w-full outline-none text-slate-700 font-medium"
+                    placeholder="Location..."
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
                 <button
-                  className="bg-blue-600 text-white px-6 rounded-lg cursor-pointer hover:bg-blue-500 hover:shadow duration-300 transition-all"
-                  onClick={() => handleSearch(search)}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold cursor-pointer hover:bg-blue-700 hover:shadow-lg transition-all duration-300"
+                  onClick={handleSearch}
                 >
-                  Search
+                  Find Jobs
                 </button>
               </div>
 
@@ -160,21 +179,39 @@ export default function Jobs() {
               </div>
 
               {/* PAGINATION */}
-              <div className="flex justify-center mt-8 gap-2">
-                <button
-                  className="cursor-pointer hover:underline p-1 rounded transition-all"
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                >
-                  Prev
-                </button>
-                <span className="m-2">{currentPage}</span>
-                <button
-                  className="cursor-pointer hover:underline p-1 rounded transition-all"
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                >
-                  Next
-                </button>
-              </div>
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-12 gap-3 items-center">
+                  <button
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 font-semibold disabled:opacity-50 hover:bg-slate-50 transition-colors cursor-pointer"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  >
+                    Previous
+                  </button>
+                  <div className="flex gap-2">
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button
+                        key={i}
+                        className={`w-10 h-10 rounded-lg font-bold transition-all ${
+                          currentPage === i + 1
+                            ? "bg-blue-600 text-white"
+                            : "bg-white text-slate-600 border border-slate-200 hover:border-blue-300"
+                        }`}
+                        onClick={() => setCurrentPage(i + 1)}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 font-semibold disabled:opacity-50 hover:bg-slate-50 transition-colors cursor-pointer"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </main>
           </div>
         </div>

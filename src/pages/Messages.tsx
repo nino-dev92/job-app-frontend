@@ -81,10 +81,10 @@ const Messages = () => {
       <Navbar />
 
       {/* Sidebar */}
-      <Sidebar />
+      {auth?.role === "employer" && <Sidebar />}
 
       {/**Inbox Sidebar */}
-      <aside className={`pt-20 border-r bg-white w-full md:w-80 min-h-screen flex-col overflow-hidden transition-all duration-300 ${id ? 'hidden md:flex' : 'flex'} md:ml-60`}>
+      <aside className={`pt-20 border-r bg-white w-full md:w-80 min-h-screen flex-col overflow-hidden transition-all duration-300 ${id ? 'hidden md:flex' : 'flex'} ${auth?.role === 'employer' ? 'md:ml-60' : 'ml-0'}`}>
         <div className="p-6 border-b flex items-center justify-between bg-slate-50/50">
           <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <FiInbox className="text-blue-600" /> Inbox
