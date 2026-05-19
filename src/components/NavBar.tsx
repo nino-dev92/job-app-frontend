@@ -22,7 +22,7 @@ const Navbar = () => {
     setAuth(null);
     sessionStorage.removeItem("auth");
     navigate("/login");
-     };
+  };
 
   return (
     <>
@@ -54,8 +54,8 @@ const Navbar = () => {
 
       {/** Employer Nav */}
       {auth?.role == "employer" && (
-        <nav className="fixed top-0 w-full bg-white border-b h-16 flex items-center justify-between px-6 z-50">
-          <div className="flex items-center gap-6  ">
+        <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm h-16 flex items-center justify-between px-6">
+          <div className="flex items-center gap-6 max-w-7xl mx-auto w-full">
             <CgMenuGridO
               size={25}
               className="md:hidden cursor-pointer hover:text-blue-500"
@@ -69,7 +69,12 @@ const Navbar = () => {
               >
                 Dashboard
               </Link>
-              <a className="font-normal text-slate-600 text-md">Messages</a>
+              <Link
+                to="/messages"
+                className="font-normal text-slate-600 text-md hover:text-blue-500 cursor-pointer transition-all active:text-blue-600 active:font-bold"
+              >
+                Messages
+              </Link>
             </div>
           </div>
           <div className="hidden md:flex items-center gap-10">
@@ -111,10 +116,13 @@ const Navbar = () => {
                   <MdDashboard size={30} className="inline mr-2" />
                   <p>Dashboard</p>
                 </NavLink>
-                <a className="flex items-center hover:text-blue-600">
+                <NavLink
+                  to="/messages"
+                  className="flex items-center hover:text-blue-600"
+                >
                   <TbMessages size={30} className="inline mr-2" />
                   Messages
-                </a>
+                </NavLink>
               </div>
               <NavLink
                 to="/post-job"
@@ -125,24 +133,28 @@ const Navbar = () => {
               </NavLink>
               <div className="flex items-center hover:text-blue-600">
                 <FaPeopleGroup size={30} className="inline mr-2" />
-                <NavLink to="/applicant-dashboard" className="cursor-pointer">Applications</NavLink>
+                <NavLink to="/applicant-dashboard" className="cursor-pointer">
+                  Applications
+                </NavLink>
               </div>
-              <div className="flex items-center hover:text-blue-600">
+              <NavLink to="/analytics" className="flex items-center hover:text-blue-600">
                 <MdOutlineAnalytics size={30} className="inline mr-2" />
                 <p className="cursor-pointer">Analytics</p>
-              </div>
+              </NavLink>
               <div className="flex items-center hover:text-blue-600">
                 <MdFactCheck size={30} className="inline mr-2" />
-                <NavLink to="/company-profile" className="cursor-pointer">Company Profile</NavLink>
+                <NavLink to="/company-profile" className="cursor-pointer">
+                  Company Profile
+                </NavLink>
               </div>
               <div className="flex justify-center mt-30">
-                 <button
-              onClick={handleLogout}
-              className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
-              title="logout"
-            >
-              <FaPowerOff size={23} />
-            </button>
+                <button
+                  onClick={handleLogout}
+                  className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
+                  title="logout"
+                >
+                  <FaPowerOff size={23} />
+                </button>
               </div>
             </nav>
           </div>
@@ -171,10 +183,10 @@ const Navbar = () => {
                   Jobs
                 </NavLink>
                 <NavLink
-                  to="/"
+                  to="/messages"
                   className="text-slate-600 font-semibold hover:text-blue-600 transition-all"
                 >
-                  Search Jobs
+                  Messages
                 </NavLink>
                 <NavLink
                   to="/applications"
@@ -183,13 +195,13 @@ const Navbar = () => {
                   My Applications
                 </NavLink>
               </div>
-             <button
-              onClick={handleLogout}
-              className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
-              title="logout"
-            >
-              <FaPowerOff size={23} />
-            </button>
+              <button
+                onClick={handleLogout}
+                className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
+                title="logout"
+              >
+                <FaPowerOff size={23} />
+              </button>
             </div>
           </div>
         </nav>
@@ -210,6 +222,12 @@ const Navbar = () => {
                   Jobs
                 </NavLink>
                 <NavLink
+                  to="/messages"
+                  className="text-slate-600 font-semibold hover:text-blue-600 transition-all"
+                >
+                  Messages
+                </NavLink>
+                <NavLink
                   to="/"
                   className="text-slate-600 font-semibold hover:text-blue-600 transition-all"
                 >
@@ -227,7 +245,7 @@ const Navbar = () => {
                   onClick={handleLogout}
                   className="text-slate-600 cursor-pointer font-semibold hover:text-blue-600 hover:scale-120 transition-all"
                   title="logout"
-                > 
+                >
                   <FaPowerOff size={23} />
                 </button>
               </div>

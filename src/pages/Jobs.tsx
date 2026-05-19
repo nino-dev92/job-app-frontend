@@ -95,15 +95,23 @@ export default function Jobs() {
                 <h1 className="text-2xl font-bold">
                   {jobs.length} {jobs.length >= 2 ? "Jobs" : "Job"} Found
                 </h1>
-                <div className="flex gap-2">
+                <div className="hidden sm:flex gap-2">
                   <button
-                    className="hover:bg-blue-500 p-2 rounded cursor-pointer"
+                    className={`p-2 rounded cursor-pointer transition ${
+                      _listView
+                        ? "bg-blue-600 text-white shadow-md"
+                        : "text-slate-500 hover:bg-blue-50"
+                    }`}
                     onClick={() => setListView(true)}
                   >
                     <CiBoxList size={25} />
                   </button>
                   <button
-                    className="hover:bg-blue-500 p-2 rounded cursor-pointer"
+                    className={`p-2 rounded cursor-pointer transition ${
+                      !_listView
+                        ? "bg-blue-600 text-white shadow-md"
+                        : "text-slate-500 hover:bg-blue-50"
+                    }`}
                     onClick={() => setListView(false)}
                   >
                     <IoGridOutline size={25} />
@@ -112,28 +120,37 @@ export default function Jobs() {
               </div>
 
               {/* JOBS */}
-              <div className="grid gap-4">
+              <div
+                className={`grid gap-6 ${!_listView ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}
+              >
                 {jobs.map((job) => (
                   <div
                     key={job._id}
-                    className="bg-white p-6 m-auto rounded-xl border flex flex-col min-w-full"
+                    className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
                   >
-                    <div className="">
-                      <h3 className=" font-bold text-lg">
-                        {job.title.toUpperCase()}
-                      </h3>
-                      <p>
-                        Company: {job.company.name} • Location: {job.location}
+                    <div>
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="font-bold text-xl text-slate-800 group-hover:text-blue-600 transition-colors">
+                          {job.title}
+                        </h3>
+                        <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap ml-3">
+                          {job.salary}
+                        </span>
+                      </div>
+                      <p className="text-slate-600 font-medium mb-1">
+                        {job.company?.name || "Unknown Company"}
                       </p>
-                      <p className="text-sm text-gray-500">
-                        Description: {job.description}
+                      <p className="text-sm text-slate-500 mb-4 flex items-center gap-1">
+                        📍 {job.location}
                       </p>
-                      <p className="text-green-600">Salary: {job.salary}</p>
+                      <p className="text-sm text-slate-600 line-clamp-3 mb-4">
+                        {job.description}
+                      </p>
                     </div>
 
-                    <div className="flex justify-center">
-                      <Link to={`/jobs/${job._id}`} className="mt-4">
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 hover:scale-105 duration-300 transition-all">
+                    <div className="mt-auto pt-4 border-t border-slate-100">
+                      <Link to={`/jobs/${job._id}`} className="block">
+                        <button className="w-full bg-slate-50 text-blue-600 font-semibold px-4 py-2.5 rounded-xl cursor-pointer hover:bg-blue-600 hover:text-white transition-all duration-300">
                           View Details
                         </button>
                       </Link>

@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <aside className="hidden md:flex fixed top-16 left-0 w-60 h-full bg-white border-r p-4">
+    <aside className="hidden md:flex fixed top-16 left-0 w-60 min-h-screen bg-white border-r p-4">
       <nav className="space-y-2 flex flex-col gap-3">
         <div className="flex">
           <MdFactCheck size={30} className="inline mr-2 text-blue-600" />
@@ -29,10 +29,10 @@ const SideBar = () => {
             Applications
           </NavLink>
         </div>
-        <div className="flex items-center hover:text-blue-600">
+        <NavLink to="/analytics" className="flex items-center hover:text-blue-600">
           <MdOutlineAnalytics size={30} className="inline mr-2" />
           <p className="cursor-pointer">Analytics</p>
-        </div>
+        </NavLink>
         <div className="flex items-center hover:text-blue-600">
           <MdFactCheck size={30} className="inline mr-2" />
           <NavLink to="/company-profile" className="cursor-pointer">

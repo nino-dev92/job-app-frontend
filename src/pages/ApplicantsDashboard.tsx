@@ -68,7 +68,6 @@ const ApplicantDashboard: React.FC = () => {
                         className="cursor-pointer border hover:border-blue-500 hover:bg-blue-400 hover:text-white"
                         onClick={() => {
                           setSelectedApplication(applicant);
-                          console.log(selectedApplication);
                         }}
                       >
                         <td className="p-4 flex items-center gap-3">

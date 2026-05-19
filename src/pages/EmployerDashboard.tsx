@@ -4,11 +4,14 @@ import useAuth from "../hooks/useAuth";
 import Loading from "../components/Loading";
 import Navbar from "../components/NavBar";
 import SideBar from "../components/SideBar";
+import { Link } from "react-router-dom";
+import { FaMessage } from "react-icons/fa6";
 
 export default function EmployerDashboard() {
   const [jobs, setJobs] = useState<any[]>([]);
   const [selectedJob, setSelectedJob] = useState<string | null>(null);
   const [applications, setApplications] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
   const api = useAxiosPrivate();
   const { auth, isLoading, setIsLoading } = useAuth();
 
@@ -17,6 +20,7 @@ export default function EmployerDashboard() {
     setIsLoading(true);
 
     fetchJobs();
+    fetchStats();
 
     setTimeout(() => {
       setIsLoading(false);
@@ -27,6 +31,15 @@ export default function EmployerDashboard() {
     if (!auth?.username) return;
     const res = await api.get("/jobs");
     setJobs(res.data.jobs || res.data);
+  };
+
+  const fetchStats = async () => {
+    try {
+      const res = await api.get("/analytics");
+      setStats(res.data.summary);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const fetchApplications = async (jobId: string) => {
@@ -63,7 +76,7 @@ export default function EmployerDashboard() {
             {/* Header */}
             <div>
               <h2 className="text-2xl font-bold">
-                Good Morning, {auth?.username?.toUpperCase()}
+                Welcome, {auth?.username?.toUpperCase()}
               </h2>
               <p className="text-slate-500">Here's what's happening today.</p>
             </div>
@@ -72,19 +85,19 @@ export default function EmployerDashboard() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-white p-4 rounded shadow hover:scale-105 transition-all cursor-pointer duration-300">
                 <p className="text-sm text-slate-500">Applicants</p>
-                <h3 className="text-xl font-bold">1,284</h3>
+                <h3 className="text-xl font-bold">{stats?.totalApplications || 0}</h3>
               </div>
               <div className="bg-white p-4 rounded shadow  hover:scale-105 transition-all cursor-pointer duration-300">
                 <p className="text-sm text-slate-500">Jobs</p>
                 <h3 className="text-xl font-bold">{jobs.length}</h3>
               </div>
               <div className="bg-white p-4 rounded shadow hover:scale-105 transition-all cursor-pointer duration-300">
-                <p className="text-sm text-slate-500">Interviews</p>
-                <h3 className="text-xl font-bold">12</h3>
+                <p className="text-sm text-slate-500">Hire Rate</p>
+                <h3 className="text-xl font-bold">{stats?.hireRate || 0}%</h3>
               </div>
               <div className="bg-white p-4 rounded shadow hover:scale-105 transition-all cursor-pointer duration-300">
-                <p className="text-sm text-slate-500">Messages</p>
-                <h3 className="text-xl font-bold">48</h3>
+                <p className="text-sm text-slate-500">Accepted</p>
+                <h3 className="text-xl font-bold">{stats?.accepted || 0}</h3>
               </div>
             </div>
 
@@ -109,7 +122,7 @@ export default function EmployerDashboard() {
                       <td className="p-3">{job.location}</td>
                       <td className="p-3">
                         <button
-                          className="text-blue-600 text-sm cursor-pointer border-1 p-1 rounded hover:bg-blue-600 hover:text-white"
+                          className="text-blue-600 text-sm cursor-pointer border p-1 rounded hover:bg-blue-600 hover:text-white"
                           onClick={() => {
                             fetchApplications(job._id);
                           }}
@@ -127,44 +140,61 @@ export default function EmployerDashboard() {
             <div className="bg-white rounded shadow p-4">
               <h3 className="font-semibold mb-3">Recent Applications</h3>
 
-              {applications.map((a, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center py-2 border-b last:border-none"
-                >
-                  <div>
-                    <p className="font-medium">{a.user.name.toUpperCase()}</p>
-                    <p className="text-sm text-slate-500">{a.user.email}</p>
-                  </div>
-                  <a
-                    href={a.cvUrl}
-                    target="_blank"
-                    className="text-blue-600 text-sm hover:underline"
+              {selectedJob &&
+                applications.map((a, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center py-2 border-b last:border-none"
                   >
-                    View CV
-                  </a>
+                    <div>
+                      <p className="font-medium">{a.user.name.toUpperCase()}</p>
+                      <p className="hidden md:inline text-slate-500">
+                        {a.user.email}
+                      </p>
+                    </div>
+                    <a
+                      href={a.cvUrl}
+                      target="_blank"
+                      className="text-blue-600 text-sm hover:underline"
+                    >
+                      View CV
+                    </a>
 
-                  <p>Status: {a.status}</p>
-                  <div className="flex gap-3">
-                    {a.status !== "accepted" && a.status !== "rejected" && (
-                      <>
-                        <button
-                          className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 transition"
-                          onClick={() => updateStatus(a._id, "accepted")}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-600 transition"
-                          onClick={() => updateStatus(a._id, "rejected")}
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
+                    <p>
+                      <span className="hidden md:block">Status: </span>
+                      {a.status}
+                    </p>
+                    <Link to={`/messages/${a.user._id}?jobId=${selectedJob}`}>
+                      <FaMessage
+                        size={20}
+                        className="inline text-blue-500 cursor-pointer"
+                        title="send a message"
+                      />
+                    </Link>
+                    <div className="flex gap-3">
+                      {a.status !== "accepted" && a.status !== "rejected" && (
+                        <>
+                          <button
+                            className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 transition"
+                            onClick={() => updateStatus(a._id, "accepted")}
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-600 transition"
+                            onClick={() => updateStatus(a._id, "rejected")}
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+
+              {selectedJob && !applications.length && (
+                <p className="text-center">No application available</p>
+              )}
             </div>
           </main>
         </div>

@@ -1,5 +1,6 @@
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
+import { FiSearch, FiMapPin } from "react-icons/fi";
 
 const Home = () => {
   return (
@@ -27,17 +28,24 @@ const Home = () => {
               </p>
 
               {/* Search */}
-              <div className="bg-white p-2 rounded-2xl shadow-xl border flex flex-col md:flex-row gap-2 max-w-2xl">
-                <input
-                  className="flex-1 px-4 py-3 border-r md:border-r border-slate-100 outline-none"
-                  placeholder="Job title, keywords..."
-                />
-                <input
-                  className="flex-1 px-4 py-3 outline-none"
-                  placeholder="City, state, or remote"
-                />
-                <button className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold cursor-pointer hover:bg-blue-700">
-                  Search Jobs
+              <div className="bg-white p-2 md:p-3 rounded-2xl md:rounded-[2rem] shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-2 max-w-2xl group transition-all duration-300 hover:border-blue-200">
+                <div className="flex-1 flex items-center px-4 py-3 border-b md:border-b-0 md:border-r border-slate-100">
+                  <FiSearch className="text-slate-400 mr-3 shrink-0" size={20} />
+                  <input
+                    className="w-full text-slate-800 placeholder:text-slate-400 outline-none bg-transparent"
+                    placeholder="Job title, keywords..."
+                  />
+                </div>
+                <div className="flex-1 flex items-center px-4 py-3">
+                  <FiMapPin className="text-slate-400 mr-3 shrink-0" size={20} />
+                  <input
+                    className="w-full text-slate-800 placeholder:text-slate-400 outline-none bg-transparent"
+                    placeholder="City, state, or remote"
+                  />
+                </div>
+                <button className="bg-blue-600 text-white px-8 py-4 rounded-xl md:rounded-2xl font-bold cursor-pointer hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-200">
+                  <span className="md:hidden lg:inline">Search Jobs</span>
+                  <span className="hidden md:inline lg:hidden">Search</span>
                 </button>
               </div>
             </div>
